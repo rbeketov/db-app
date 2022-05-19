@@ -1,0 +1,8 @@
+Customers|CustomerID
+CompanyName|String|20|ContactName|String|16|CustomerID|String|8
+  Richter Supermarkt|       Anna Holz|   RICMA
+  Richter Supermarkt|       Anna Holz|   RICSU
+    Romero y tomillo| Alejandra Camin|   ROMEY
+       Sante Gourmet|       Anna Holz|   SANTG
+  Save-a-lot Markets|  Jose Pavarotti|   SAVEA
+  Seven Seas Imports|       Anna Holz|   SEVES

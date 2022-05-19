@@ -1,17 +1,17 @@
-#include "utils.hpp"
-
+#include "utils.h"
+#include "exceptions.h"
 
 namespace dbms {
 
 const int DBDateKB::arrDays[13] = {-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 DBDateKB::DBDateKB(std::string date) {
-	if (date.find('.') == std::string::npos || date.find_last_of('.') == std::string::npos) { day = 1; month = 1; year = 1; return; };
+	if (date.find('.') == std::string::npos || date.find_last_of('.') == std::string::npos) { throw types::DBTableError(*this); };
 	day = stoi(date.substr(0, date.find('.')));
 	month = stoi(date.substr(date.find('.') + 1, date.find_last_of('.') - date.find('.')));
 	year = stoi(date.substr(date.find_last_of('.') + 1));
 	if (day < 1 || day > GetDaysInMonth(month, year) || GetDaysInMonth(month, year) == -1) {
-		day = 1; month = 1; year = 1;
+		throw types::DBTableError(*this);
 	}
 
 }
@@ -24,7 +24,9 @@ DBDateKB::DBDateKB(const DBDateKB& val) {
 
 DBDateKB::DBDateKB(int d, int m, int y) {
 	if (d < 1 || d > GetDaysInMonth(m, y) || GetDaysInMonth(m, y) == -1) {
+		throw types::DBTableError(*this);
 		day = 1; month = 1; year = 1;
+		
 	} 
 	day = d;
 	month = m;
@@ -123,7 +125,7 @@ DBDateKB& DBDateKB::operator=(DBDateKB& date) {
 DBDateKB& DBDateKB::operator-=(int days) {
 	DBDateKB minimum(1,1,1);
 	if (this->dateToYlian()-days < minimum.dateToYlian()) {
-        throw;
+        throw types::InvalidExecute(*this, days);
     }
 	
 	if (day - days > 0) {

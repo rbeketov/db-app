@@ -1,0 +1,13 @@
+Products|ProductID
+ProductID|String|20|UnitInStock|Int32|8|UnitPrice|Double|12
+          Spiky Pung|      22|       97.04
+  Gloop Galloop Soup|      20|       50.49
+           Hat Sauce|      25|        13.2
+   Rodneys Marmalade|      12|       22.12
+    Carnarvon Tigers|      20|        60.9
+  Raclet Courdavault|      15|        53.8
+     Manjimup Apples|      20|       51.91
+      Tarte au sucre|      30|        48.4
+         Ipoh Coffee|       9|       45.26
+   Rossle Sauerkraut|      20|       44.88
+             Hot Dog|      20|         8.3

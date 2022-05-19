@@ -1,26 +1,44 @@
-#include "utils.hpp"
+#include "utils.h"
 
-#define DATABASE_PATH_STUDENTS     "../LibraryTxt/Students.txt"
-#define DATABASE_PATH_BOOKS        "../LibraryTxt/Books.txt"
-#define DATABASE_PATH_ABONEMENTS   "../LibraryTxt/Abonements.txt"
+enum menuStatus {
+	TEST = 1,
+	EXIT = 10,
+};
 
 int menu(void);
+void test();
 
 int main () {
-    dbms::DBTableTxt A;
-    A.ReadDBTable(DATABASE_PATH_STUDENTS);
-    types::SQLString B("IU5-22B");
-    //
-    A.AddRow(A.CreateRow());
-    // A.SelfRows("Group", EQUAL, &B)->PrintTable(80);
-    A.PrintTable(80);
+	try {
+		while(true) {
+			switch(menu()) {
+				case TEST:
+					test();
+					break;
+				case EXIT:
+					std::cout << "Завершение работы программы...\n";
+					return 0;
+				default:
+					std::cout << "Выбрано несуществующее действие, повторите попытку\n"; 
+				break;
+			}
+		}
+	} catch (std::exception& er) {
+		printf("error: %s\n", er.what());
+		// printf("Аварийный выход, внесённые ранее изменения сохранены...");
+		return -1;
+	} catch (...) {
+		printf("Упс! Что-то пошло не так... :(");
+		// printf("Аварийный выход, внесённые ранее изменения сохранены...");
+		return -1;
+	}
     
-    return 0;
 }
 
 int menu() {
     std::cout << "================= ПРАКТИКА ===================\n";
-	std::cout << "\t1 - Привет\n";
+	std::cout << "\t1 - Тест\n";
+	std::cout << "\t10 - Выход\n";
 	int choice;
 	std::cout << "Введите номер действия для выбора\n";
 	std::cin >> choice;
@@ -31,4 +49,11 @@ int menu() {
 		std::cin >> choice;
 	}
 	return choice;
+}
+
+void test() {
+	dbms::DBTableTxt A;
+    A.ReadDBTable(DATABASE_PATH_ABONEMENTS);
+    A.AddRow(A.CreateRow());
+    A.PrintTable(80);
 }

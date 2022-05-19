@@ -1,4 +1,5 @@
-#include "utils.hpp"
+#include "utils.h"
+#include "exceptions.h"
 
 namespace dbms {
 
@@ -18,7 +19,7 @@ DBType stringToDBType(std::string type) {
 	if (type == "Date") {
 		return Date;
 	}
-	return NoType;
+	throw types::СonversionError();
 }
 
 std::string DBTypeToString(DBType type) {
@@ -29,26 +30,22 @@ std::string DBTypeToString(DBType type) {
 		case String: return "String";
 		case Date: return "Date";
 		default:
-			exit(1);
-			break;
+			throw types::СonversionError();
 	}
 }
-
 
 void DBTableTxt::ReadDBTable(std::string fileName) {
 	std::ifstream tabBd(fileName);
 
 	if (!tabBd.is_open()) {
-		puts("Ошибка открытия (ReadDBTable)");
-		throw;
+		throw types::DBTableError(fileName);
 	}
 	std::string buffer;
 	getline(tabBd, buffer, '|');
 
 	if (buffer != GetTabNameFromPath(fileName)) {
 		tabBd.close();
-		puts("Имя таблицы не совпадает с названием файла (ReadDBTable)");
-		return;
+		throw types::DBTableError(fileName, buffer);
 	}
 
 	this->fileName = fileName;
@@ -70,8 +67,7 @@ void DBTableTxt::ReadDBTable(std::string fileName) {
 	while(true) {
 		if ((posEnd = buffer.find('|', posStart)) == std::string::npos) {
 			tabBd.close();
-			puts("Некорректная таблица (ReadDBTable)");
-			throw;
+			throw types::DBTableError(tableName, ERROR_TAG);
 	    }
 		tmpData.first = buffer.substr(posStart, posEnd - posStart);
 		strcpy(tmpCD.colName, tmpData.first.c_str());
@@ -79,8 +75,7 @@ void DBTableTxt::ReadDBTable(std::string fileName) {
 		posStart = posEnd+1;
 		if ((posEnd = buffer.find('|', posStart)) == std::string::npos) {
 			tabBd.close();
-			puts("Некорректная таблица (ReadDBTable)");
-			throw;
+			throw types::DBTableError(tableName, ERROR_TAG);
 		}
 		tmpCD.colType = stringToDBType(buffer.substr(posStart, posEnd - posStart));
 		posStart = posEnd+1;
@@ -111,8 +106,7 @@ void DBTableTxt::ReadDBTable(std::string fileName) {
 		for (auto it = columnHeaders.begin(); it != --columnHeaders.end(); ++it) {
 			if ((posEnd = buffer.find('|', posStart)) == std::string::npos) {
 				tabBd.close();
-				puts("Некорректная такблица (ReadDBTable)");
-				throw;
+				throw types::DBTableError(tableName, ERROR_TAG);
 			}
 
 			tmpValue = buffer.substr(posStart, posEnd - posStart);
@@ -132,11 +126,7 @@ void DBTableTxt::ReadDBTable(std::string fileName) {
 		tmpRow.clear();
 	}
 	tabBd.close();
-
-
-
 }
-
 
 void DBTableTxt::PrintTable(int screenWidth) {
 	std::cout << '\n' << "Таблица " << tableName << std::endl;
@@ -189,16 +179,14 @@ void DBTableTxt::PrintTable(int screenWidth) {
 void DBTableTxt::WriteDBTable(std::string fileName) {
 	std::fstream tabBd(fileName);
 	if (!tabBd.is_open()) {
-		puts("Ошибка открытия (WriteDBTable)");
-		return;
+		throw types::DBTableError(fileName);
 	}
 
 	std::string buffer;
 	std::getline(tabBd, buffer, '|');
 	if (buffer != GetTabNameFromPath(fileName)) {
 		tabBd.close();
-		puts("Название таблицы не совпадает с название файла (WriteDBTable)");
-		return;
+		throw types::DBTableError(fileName, buffer);
 	}
 
 	tabBd.seekg(0);
@@ -234,8 +222,7 @@ types::SQLValue* GetValue(std::string value, std::string columnName, Header hdr)
 		case Date:
 			return new types::SQLDate(value);
 		default:
-			std::cout << "Подан несуществующий тип (GetValue): " << columnName << std::endl;
-			return nullptr;
+			throw types::СonversionError();
 	}
 }
 
@@ -265,8 +252,7 @@ std::string DBTableTxt::valueToString(Row& row, std::string columnName) {
 				break;
 		}
 	}
-	puts("Такого название cтолбца не существует (valueToString)");
-	return "";
+	throw types::DBTableError(row, columnName);
 }
 
 std::string ignoreBlanc(const std::string str){		
@@ -280,82 +266,6 @@ std::string GetTabNameFromPath(std::string path) {
 	size_t posSlash = path.find_last_of('/');
 	return path.substr(posSlash+1, posPoint-posSlash-1);
 }
-
-// bool comparator(DBType type, void *obj1, Condition condition, void *obj2) {
-// 	switch (type) {
-// 		case Int32: switch (condition) {
-// 			case Equal: 
-// 				return *(int*)obj1 == *(int*)obj2;
-// 			case NotEqual:
-// 				return *(int*)obj1 != *(int*)obj2;
-// 			case Less:
-// 				return *(int*)obj1 < *(int*)obj2;
-// 			case Greater:
-// 				return *(int*)obj1 > *(int*)obj2;
-// 			case LessOrEqual:
-// 				return *(int*)obj1 <= *(int*)obj2;
-// 			case GreaterOrEqual:
-// 				return *(int*)obj1 >= *(int*)obj2;
-// 			default: 
-// 				std::cout << "������������ �������� ���������\n" << std::endl;
-// 				return false;
-// 			}
-// 		case Double: switch (condition) {
-// 			case Equal:
-// 				return *(double*)obj1 == *(double*)obj2;
-// 			case NotEqual:
-// 				return *(double*)obj1 != *(double*)obj2;
-// 			case Less:
-// 				return *(double*)obj1 < *(double*)obj2;
-// 			case Greater:
-// 				return *(double*)obj1 > *(double*)obj2;
-// 			case LessOrEqual:
-// 				return *(double*)obj1 <= *(double*)obj2;
-// 			case GreaterOrEqual:
-// 				return *(double*)obj1 >= *(double*)obj2;
-// 			default: 
-// 				std::cout << "������������ �������� ���������\n" << std::endl;
-// 				return false;
-// 			}
-// 		case String: switch (condition) {
-// 			case Equal:
-// 				return ignoreBlanc(*(std::string*)obj1) == ignoreBlanc(*(std::string*)obj2);
-// 			case NotEqual:
-// 				return ignoreBlanc(*(std::string*)obj1) != ignoreBlanc(*(std::string*)obj2);
-// 			case Less:
-// 				return ignoreBlanc(*(std::string*)obj1) < ignoreBlanc(*(std::string*)obj2);
-// 			case Greater:
-// 				return ignoreBlanc(*(std::string*)obj1) > ignoreBlanc(*(std::string*)obj2);
-// 			case LessOrEqual:
-// 				return ignoreBlanc(*(std::string*)obj1) <= ignoreBlanc(*(std::string*)obj2);
-// 			case GreaterOrEqual:
-// 				return ignoreBlanc(*(std::string*)obj1)>= ignoreBlanc(*(std::string*)obj2);
-// 			default: std::cout << "������������ �������� ���������\n" << std::endl;
-// 				return false;
-// 			}
-// 		case Date: switch (condition){
-// 			case Equal:
-// 				return *(dbms::DBDateKB*)obj1 == *(dbms::DBDateKB*)obj2;
-// 			case NotEqual:
-// 				return *(dbms::DBDateKB*)obj1 != *(dbms::DBDateKB*)obj2;
-// 			case Less:
-// 				return *(dbms::DBDateKB*)obj1 < *(dbms::DBDateKB*)obj2;
-// 			case  Greater:
-// 				return *(dbms::DBDateKB*)obj1 > *(dbms::DBDateKB*)obj2;
-// 			case LessOrEqual:
-// 				return *(dbms::DBDateKB*)obj1 <= *(dbms::DBDateKB*)obj2;
-// 			case GreaterOrEqual:
-// 				return *(dbms::DBDateKB*)obj1 >= *(dbms::DBDateKB*)obj2;
-// 			default:
-// 				std::cout << "������������ �������� ���������\n" << std::endl;
-// 				return false;
-// 			 }	
-		
-// 		default:
-// 			std::cout << "������������ ��� ������\n" << std::endl;
-// 			return false;
-// 	}
-// }
 
 void DBTableTxt::CreateTableMaket(Strip *&strips,int &nStrips,int screenWidth) {
 	Header::iterator headerIter,contHeaderIter;		
@@ -373,10 +283,8 @@ void DBTableTxt::CreateTableMaket(Strip *&strips,int &nStrips,int screenWidth) {
 	int buff[40]={0};
 	for (currCol = 0; currCol < nColumn; currCol++){
 		if (fieldW[currCol] >= screenWidth-1) {
-			std::cout << "������ ������� " << currCol << " ������ ������ ������\n";
-			std::cout << "������� ������ �����������" << std::endl;
 			nStrips = 0;
-			return;
+			throw types::DBTableError(currCol);
 		}
 		sumWidth += fieldW[currCol];
 		if ((sumWidth<screenWidth-1) && (currCol<nColumn-1)) {
@@ -419,7 +327,6 @@ DBTableTxt::~DBTableTxt() {
 // 	}
 }
 
-
 DBTableTxt* DBTableTxt::SelfRows(std::string colName, StatusEx cond, types::SQLValue* value) {
 	bool bVal;
 	std::string tabName = "SR" + GetTableName();
@@ -445,7 +352,8 @@ std::vector<int> DBTableTxt::IndexOfRecord(types::SQLValue* keyValue, std::strin
 		}
 	}
 	if (!flag) {
-		return bufOfIndex;
+		Row row;
+		throw types::DBTableError(row, keyColumnName);
 	}
 	bool bVal;
 	for (size_t i = 0; i < data.size(); i++) {
@@ -461,24 +369,31 @@ Row DBTableTxt::CreateRow() {
 	Row row;
 	std::pair<std::string, types::SQLValue*> tmpPair;
 	std::string tmpValue;
-	for (auto it = columnHeaders.begin(); it != columnHeaders.end(); it++) {
-		std::cout << "Введите поле \"" + it->first << "\" (максимальная длинна - " << it->second.length << ", тип - " << DBTypeToString(it->second.colType) << ")" << std::endl;
-		tmpPair.first = it->first;
+	try {
+		for (auto it = columnHeaders.begin(); it != columnHeaders.end(); it++) {
+			std::cout << "Введите значение поля без пробелов \"" + it->first << "\" (максимальная длинна - " << it->second.length << ", тип - " << DBTypeToString(it->second.colType) << ")" << std::endl;
+			tmpPair.first = it->first;
 
-		std::cin >> tmpValue;
-		while ((tmpValue.length() > it->second.length || std::cin.fail()) && tmpValue != "!q") {
-			std::cout << "Слишком большой текст, повторите попытку ввода\n для отмены ввода отправьте !q\n";
-			std::cin.clear();
-			std::cin.ignore(25,'\n');
 			std::cin >> tmpValue;
+			while ((tmpValue.length() > it->second.length || std::cin.fail())  && tmpValue != "!q") {
+				std::cout << "Ошибка ввода, повторите попытку ввода\nДля отмены ввода отправьте !q\n";
+				std::cin.clear();
+				std::cin.ignore(1000,'\n');
+				std::cin >> tmpValue;
+			}
+			if (tmpValue == "!q") {
+				row.clear();
+				puts("Сброс ввода");
+				return row;
+			}
+			tmpPair.second = GetValue(tmpValue, it->first, columnHeaders);
+			row.insert(tmpPair);
+			std::cin.clear();
+			std::cin.ignore(100,'\n');
 		}
-		if (tmpValue == "!q") {
-			row.clear();
-			puts("Сброс ввода");
-			return row;
-		}
-		tmpPair.second = GetValue(tmpValue, it->first, columnHeaders);
-		row.insert(tmpPair);
+	} catch (...) {
+		row.clear();
+		throw types::NewRowError();
 	}
 	return row;
 }
@@ -489,7 +404,7 @@ void DBTableTxt::AddRow(Row row, int index) {
 	} else if (index >= 0) {
 		data[index] = row;
 	} else {
-		puts("Введён некорректный индекс (AddRow)");
+		throw types::NewRowError(index);
 	}
 }
 

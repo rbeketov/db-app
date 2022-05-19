@@ -9,11 +9,13 @@
 #include <vector>
 #include <map>
 
+#define DATABASE_PATH_STUDENTS     "../LibraryTxt/Students.txt"
+#define DATABASE_PATH_BOOKS        "../LibraryTxt/Books.txt"
+#define DATABASE_PATH_ABONEMENTS   "../LibraryTxt/Abonements.txt"
 
-#define LENGTH  24
-
-#define ERROR_TAG       -1
-#define SUCCESSFUL_TAG   0
+#define LENGTH                     24
+#define ERROR_TAG                  -1
+#define SUCCESSFUL_TAG             0
 
 
 enum DBType {
@@ -35,15 +37,6 @@ enum StatusEx {
     EQUAL,
 };
 
-enum Condition {
-	Undefined,
-	Equal,
-	NotEqual,
-	Less,
-	Greater,
-	LessOrEqual,
-	GreaterOrEqual,
-};
 
 namespace dbms {
 
@@ -86,6 +79,8 @@ namespace dbms {
 
 
 namespace types {
+    
+    std::string statusToStr(StatusEx status);
 
 class SQLValue {
     public:
@@ -110,19 +105,19 @@ class SQLInt32: public SQLValue {
         int value = 0;
     public:
         SQLInt32(int value): value(value) {}
-        void GetValue(int& val) override { val = value; }
-        void GetValue(double& val) override { throw; }
-        void GetValue(std::string& val) override { throw; }
-        void GetValue(dbms::DBDateKB& val) override { throw; }
-        void GetValue(bool& val) override { throw; }
+        void GetValue(int& val) override;
+        void GetValue(double& val) override;
+        void GetValue(std::string& val) override;
+        void GetValue(dbms::DBDateKB& val) override;
+        void GetValue(bool& val) override;
 
-        void SetValue(const int& val) override { value = val; }
-        void SetValue(const double& val) override { throw; }
-        void SetValue(const std::string& val) override { throw; }
-        void SetValue(dbms::DBDateKB& val) override { throw; }
-        void SetValue(const bool& val) override { throw; }
+        void SetValue(const int& val) override;
+        void SetValue(const double& val) override;
+        void SetValue(const std::string& val) override;
+        void SetValue(dbms::DBDateKB& val) override;
+        void SetValue(const bool& val) override;
 
-        DBType GetType() override {return DBType::Int32;}
+        DBType GetType() override;
         SQLValue* Execute(StatusEx cond, SQLValue* rvalue) override;
 };
 
@@ -132,19 +127,19 @@ class SQLDouble: public SQLValue {
     public:
         SQLDouble(double value): value(value) {}
   
-        void GetValue(int& val) override { throw; }
-        void GetValue(double& val) override { val = value; }
-        void GetValue(std::string& val) override { throw; }
-        void GetValue(dbms::DBDateKB& val) override { throw; }
-        void GetValue(bool& val) override { throw; }
+        void GetValue(int& val) override;
+        void GetValue(double& val) override;
+        void GetValue(std::string& val) override;
+        void GetValue(dbms::DBDateKB& val) override;
+        void GetValue(bool& val) override;
 
-        void SetValue(const int& val) override { throw; }
-        void SetValue(const double& val) override { value = val; }
-        void SetValue(const std::string& val) override { throw; }
-        void SetValue(dbms::DBDateKB& val) override { throw; }
-        void SetValue(const bool& val) override { throw; }
+        void SetValue(const int& val) override;
+        void SetValue(const double& val) override;
+        void SetValue(const std::string& val) override;
+        void SetValue(dbms::DBDateKB& val) override;
+        void SetValue(const bool& val) override;
 
-        DBType GetType() override {return DBType::Double;}
+        DBType GetType() override;
         SQLValue* Execute(StatusEx cond, SQLValue* rvalue) override;
 };
 
@@ -153,19 +148,19 @@ class SQLString: public SQLValue {
         std::string value = 0;
     public:
         SQLString(std::string value): value(value) {}
-        void GetValue(int& val) override { throw; }
-        void GetValue(double& val) override { throw; }
-        void GetValue(std::string& val) override { val = value; }
-        void GetValue(dbms::DBDateKB& val) override { throw; }
-        void GetValue(bool& val) override { throw; }
+        void GetValue(int& val) override;
+        void GetValue(double& val) override;
+        void GetValue(std::string& val) override;
+        void GetValue(dbms::DBDateKB& val) override;
+        void GetValue(bool& val) override;
 
-        void SetValue(const int& val) override { throw; }
-        void SetValue(const double& val) override { throw; }
-        void SetValue(const std::string& val) override { value = val; }
-        void SetValue(dbms::DBDateKB& val) override { throw; }
-        void SetValue(const bool& val) override { throw; }
+        void SetValue(const int& val) override;
+        void SetValue(const double& val) override;
+        void SetValue(const std::string& val) override;
+        void SetValue(dbms::DBDateKB& val) override;
+        void SetValue(const bool& val) override;
 
-        DBType GetType() override {return DBType::String;}
+        DBType GetType() override;
         SQLValue* Execute(StatusEx cond, SQLValue* rvalue) override;
 };
 
@@ -175,19 +170,19 @@ class SQLDate: public SQLValue {
     public:
         SQLDate(std::string value): value(value) {}
         SQLDate(dbms::DBDateKB val) { value = val; }
-        void GetValue(int& val) override { throw; }
-        void GetValue(double& val) override { throw; }
-        void GetValue(std::string& val) override { throw; }
-        void GetValue(dbms::DBDateKB& val) override { val = value; }
-        void GetValue(bool& val) override { throw; }
+        void GetValue(int& val) override;
+        void GetValue(double& val) override;
+        void GetValue(std::string& val) override;
+        void GetValue(dbms::DBDateKB& val) override;
+        void GetValue(bool& val) override;
 
-        void SetValue(const int& val) override { throw; }
-        void SetValue(const double& val) override { throw; }
-        void SetValue(const std::string& val) override { throw; }
-        void SetValue(dbms::DBDateKB& val) override { value = val; }
-        void SetValue(const bool& val) override { throw; }
+        void SetValue(const int& val) override;
+        void SetValue(const double& val) override;
+        void SetValue(const std::string& val) override;
+        void SetValue(dbms::DBDateKB& val) override;
+        void SetValue(const bool& val) override;
 
-        DBType GetType() override {return DBType::Date;}
+        DBType GetType() override;
         SQLValue* Execute(StatusEx cond, SQLValue* rvalue) override;
 };
 
@@ -196,22 +191,21 @@ class SQLBool: public SQLValue {
         bool value;
     public:
         SQLBool(bool value): value(value) {}
-        void GetValue(int& val) override { throw; }
-        void GetValue(double& val) override { throw; }
-        void GetValue(std::string& val) override { throw; }
-        void GetValue(dbms::DBDateKB& val) override { throw; }
-        void GetValue(bool& val) override { val = value; }
+        void GetValue(int& val) override;
+        void GetValue(double& val) override;
+        void GetValue(std::string& val) override;
+        void GetValue(dbms::DBDateKB& val) override;
+        void GetValue(bool& val) override;
 
-        void SetValue(const int& val) override { throw; }
-        void SetValue(const double& val) override { throw; }
-        void SetValue(const std::string& val) override { throw; }
-        void SetValue(dbms::DBDateKB& val) override { throw; }
-        void SetValue(const bool& val) override { value = val; }
+        void SetValue(const int& val) override;
+        void SetValue(const double& val) override;
+        void SetValue(const std::string& val) override;
+        void SetValue(dbms::DBDateKB& val) override;
+        void SetValue(const bool& val) override;
 
-        DBType GetType() override {return DBType::Bool;}
+        DBType GetType() override;
         SQLValue* Execute(StatusEx cond, SQLValue* rvalue) override;
 };
-
 
 }  // end of namespace types
 

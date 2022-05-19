@@ -1,0 +1,13 @@
+Orders|OrderID
+CustomerID|String|8|OrderDate|DBDate|12|OrderID|Int32|8
+   RICSU|    2.1.2017|       1
+   ROMEY|   23.1.2017|       2
+   SANTG|    1.2.2017|       3
+   RICSU|    2.2.2017|       5
+   RICMA|   26.6.2017|       6
+   RICMA|   27.6.2017|       7
+   RICMA|   26.6.2017|       8
+   ROMEY|   16.7.2017|       9
+   ROMEY|   16.7.2017|      10
+   ROMEY|    4.1.2018|      11
+   RICSU|   21.4.2018|      12
