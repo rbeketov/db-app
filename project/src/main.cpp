@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "mcustomers.h"
 
 enum menuStatus {
 	TEST = 1,
@@ -52,8 +53,12 @@ int menu() {
 }
 
 void test() {
-	dbms::DBTableTxt A;
-    A.ReadDBTable(DATABASE_PATH_ABONEMENTS);
-    A.AddRow(A.CreateRow());
-    A.PrintTable(80);
+	types::SQLDate start("05.04.2017");
+	types::SQLDate end("05.12.2017");
+	dbms::DBTableTxt* orders = dateRange(DATABASE_ORDERS ,start, end);
+	std::unordered_map<std::string, std::vector<types::SQLValue*> > cOrders = customersOrders(orders);
+	std::unordered_map<std::string, double > cCash = customersCash(cOrders);
+	std::string mainCustomer = findMainCustomers(cCash);
+	std::pair<std::string, std::string> resInfo = customerInfo(mainCustomer);
+	std::cout << resInfo.first << " " << resInfo.second << std::endl;
 }

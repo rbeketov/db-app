@@ -9,13 +9,14 @@
 #include <vector>
 #include <map>
 
-#define DATABASE_PATH_STUDENTS     "../LibraryTxt/Students.txt"
-#define DATABASE_PATH_BOOKS        "../LibraryTxt/Books.txt"
-#define DATABASE_PATH_ABONEMENTS   "../LibraryTxt/Abonements.txt"
+#define DATABASE_ORDERS            "../LibraryTxt/Orders.txt"
+#define DATABASE_ORDER_DETAILS     "../LibraryTxt/OrderDetails.txt"
+#define DATABASE_CUSTOMERS         "../LibraryTxt/Customers.txt"
 
 #define LENGTH                     24
 #define ERROR_TAG                  -1
 #define SUCCESSFUL_TAG             0
+#define SCREEN_SIZE                80
 
 
 enum DBType {
@@ -105,6 +106,8 @@ class SQLInt32: public SQLValue {
         int value = 0;
     public:
         SQLInt32(int value): value(value) {}
+        SQLInt32& operator=(SQLValue* val);
+
         void GetValue(int& val) override;
         void GetValue(double& val) override;
         void GetValue(std::string& val) override;
@@ -126,7 +129,8 @@ class SQLDouble: public SQLValue {
         double value = 0;
     public:
         SQLDouble(double value): value(value) {}
-  
+        SQLDouble& operator=(SQLValue* val);
+
         void GetValue(int& val) override;
         void GetValue(double& val) override;
         void GetValue(std::string& val) override;
@@ -148,6 +152,8 @@ class SQLString: public SQLValue {
         std::string value = 0;
     public:
         SQLString(std::string value): value(value) {}
+        SQLString& operator=(SQLValue* val);
+
         void GetValue(int& val) override;
         void GetValue(double& val) override;
         void GetValue(std::string& val) override;
@@ -170,6 +176,8 @@ class SQLDate: public SQLValue {
     public:
         SQLDate(std::string value): value(value) {}
         SQLDate(dbms::DBDateKB val) { value = val; }
+        SQLDate& operator=(SQLValue* val);
+
         void GetValue(int& val) override;
         void GetValue(double& val) override;
         void GetValue(std::string& val) override;
@@ -191,6 +199,8 @@ class SQLBool: public SQLValue {
         bool value;
     public:
         SQLBool(bool value): value(value) {}
+        SQLBool& operator=(SQLValue* val);
+
         void GetValue(int& val) override;
         void GetValue(double& val) override;
         void GetValue(std::string& val) override;
@@ -251,7 +261,7 @@ namespace dbms {
             
             std::string valueToString(Row& row, std::string columnName);
             void ReadDBTable(std::string fileName); // tabName=path+tableName
-            void PrintTable(int screenWidth);
+            void PrintTable(int screenWidth = SCREEN_SIZE);
             void WriteDBTable(std::string fileName); //  tabName=path+tableName
             void WriteTableBin(std::string fileName);
             void ReadTableBin(std::string fileName);
@@ -266,6 +276,7 @@ namespace dbms {
             std::string GetTableName() {return tableName;}
             // std::string GetPrimaryKey() {return primaryKey;}
             Header& GetHeader() { return columnHeaders; }
+            std::vector<Row>* GetData() { return &data; }
             // void SetHeader(Header& hdr) { columnHeaders = hdr; }
             // Row GetRow(int index);
             

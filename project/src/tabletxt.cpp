@@ -110,6 +110,7 @@ void DBTableTxt::ReadDBTable(std::string fileName) {
 			}
 
 			tmpValue = buffer.substr(posStart, posEnd - posStart);
+			tmpValue = ignoreBlanc(tmpValue);
 			tmpPair.first = it->first;
 			tmpPair.second = GetValue(tmpValue, it->first, columnHeaders);
 			tmpRow.insert(tmpPair);
@@ -118,6 +119,7 @@ void DBTableTxt::ReadDBTable(std::string fileName) {
 		}
 
 		tmpValue = buffer.substr(posStart, posEnd - posStart);
+		tmpValue = ignoreBlanc(tmpValue);
 		tmpPair.first = (--columnHeaders.end())->first;
 		tmpPair.second = GetValue(tmpValue, (--columnHeaders.end())->first, columnHeaders);
 		tmpRow.insert(tmpPair);
@@ -257,8 +259,11 @@ std::string DBTableTxt::valueToString(Row& row, std::string columnName) {
 
 std::string ignoreBlanc(const std::string str){		
 	std::string bufStr = str;
-	int begStr = bufStr.find_first_not_of(' ');
-	return bufStr.substr(begStr);
+	size_t begStr = bufStr.find_first_not_of(' ');
+	size_t endStr = bufStr.find_last_not_of(' ');
+	bufStr = bufStr.substr(begStr, endStr-begStr+1);
+	return bufStr;
+	
 }
 
 std::string GetTabNameFromPath(std::string path) { 
@@ -329,11 +334,12 @@ DBTableTxt::~DBTableTxt() {
 
 DBTableTxt* DBTableTxt::SelfRows(std::string colName, StatusEx cond, types::SQLValue* value) {
 	bool bVal;
-	std::string tabName = "SR" + GetTableName();
+	std::string tabName = GetTableName();
 	DBTableTxt* tab = new DBTableTxt(tabName);
 	tab->columnHeaders = columnHeaders;
 	for (size_t i = 0; i < data.size(); i++) {
 		data[i][colName]->Execute(cond, value)->GetValue(bVal);
+		// std::cout << bVal << std::endl;
 		if (bVal) {
 			tab->data.push_back(data[i]);
 		}

@@ -32,6 +32,15 @@ std::string statusToStr(StatusEx status) {
         return result;
     }
 
+SQLInt32& SQLInt32::operator=(SQLValue* val) {
+    int buffer = 0;
+    if (val->GetType() != DBType::Int32) {
+        throw InvalidTypeValue(GetType());
+    }
+    val->GetValue(buffer);
+    value = buffer;
+    return *this;
+}
 void SQLInt32::GetValue(int& val) { val = value; }
 void SQLInt32::GetValue(double& val) { throw InvalidTypeValue(GetType()); }
 void SQLInt32::GetValue(std::string& val) { throw InvalidTypeValue(GetType()); }
@@ -44,10 +53,16 @@ void SQLInt32::SetValue(dbms::DBDateKB& val) { throw InvalidTypeValue(GetType())
 void SQLInt32::SetValue(const bool& val) { throw InvalidTypeValue(GetType()); }
 DBType SQLInt32::GetType() {return DBType::Int32;}
 SQLValue* SQLInt32::Execute(StatusEx cond, SQLValue* rvalue) {
-    if (rvalue->GetType() != DBType::Int32) {
+    if (rvalue->GetType() != DBType::Int32 && rvalue->GetType() != DBType::Double) {
         throw InvalidExecute(GetType(), rvalue->GetType());
     }
     int lv = this->value;
+    // костыль
+    if (rvalue->GetType() == DBType::Double) {
+        double drv;
+        rvalue->GetValue(drv);
+        return new SQLDouble(lv*drv);
+    }
     int rv = 0;
     rvalue->GetValue(rv);
     switch (cond) {
@@ -70,7 +85,15 @@ SQLValue* SQLInt32::Execute(StatusEx cond, SQLValue* rvalue) {
     }
 }
 
-
+SQLDouble& SQLDouble::operator=(SQLValue* val) {
+    double buffer = 0;
+    if (val->GetType() != DBType::Double) {
+        throw InvalidTypeValue(GetType());
+    }
+    val->GetValue(buffer);
+    value = buffer;
+    return *this;
+}
 void SQLDouble::GetValue(int& val) { throw InvalidTypeValue(GetType());  }
 void SQLDouble::GetValue(double& val) { val = value; }
 void SQLDouble::GetValue(std::string& val) { throw InvalidTypeValue(GetType()); }
@@ -109,7 +132,15 @@ SQLValue* SQLDouble::Execute(StatusEx cond, SQLValue* rvalue) {
     }
 }
 
-
+SQLString& SQLString::operator=(SQLValue* val) {
+    std::string buffer = 0;
+    if (val->GetType() != DBType::String) {
+        throw InvalidTypeValue(GetType());
+    }
+    val->GetValue(buffer);
+    value = buffer;
+    return *this;
+}
 void SQLString::GetValue(int& val) { throw InvalidTypeValue(GetType());  }
 void SQLString::GetValue(double& val) { throw InvalidTypeValue(GetType()); }
 void SQLString::GetValue(std::string& val) { val = value; }
@@ -146,7 +177,15 @@ SQLValue* SQLString::Execute(StatusEx cond, SQLValue* rvalue) {
     }
 }
 
-
+SQLDate& SQLDate::operator=(SQLValue* val) {
+    dbms::DBDateKB buffer;
+    if (val->GetType() != DBType::Date) {
+        throw InvalidTypeValue(GetType());
+    }
+    val->GetValue(buffer);
+    value = buffer;
+    return *this;
+}
 void SQLDate::GetValue(int& val) { throw InvalidTypeValue(GetType());  }
 void SQLDate::GetValue(double& val) { throw InvalidTypeValue(GetType()); }
 void SQLDate::GetValue(std::string& val) { throw InvalidTypeValue(GetType()); }
@@ -204,7 +243,15 @@ SQLValue* SQLDate::Execute(StatusEx cond, SQLValue* rvalue) {
     }
 }
 
-
+SQLBool& SQLBool::operator=(SQLValue* val) {
+    bool buffer;
+    if (val->GetType() != DBType::Bool) {
+        throw InvalidTypeValue(GetType());
+    }
+    val->GetValue(buffer);
+    value = buffer;
+    return *this;
+}
 void SQLBool::GetValue(int& val) { throw InvalidTypeValue(GetType());  }
 void SQLBool::GetValue(double& val) { throw InvalidTypeValue(GetType()); }
 void SQLBool::GetValue(std::string& val) { throw InvalidTypeValue(GetType()); }

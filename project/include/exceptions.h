@@ -31,7 +31,7 @@ class InvalidExecute: public ValueException {
   InvalidExecute(DBType type, StatusEx status)
       : ValueException("Нельзя выполнить операцию " + types::statusToStr(status) + " c " + dbms::DBTypeToString(type)) {}
   InvalidExecute(DBType orig, DBType accept)
-      : ValueException("Подан несовместимы тип " + dbms::DBTypeToString(accept) + " для типа " + dbms::DBTypeToString(orig)) {}
+      : ValueException("Подан несовместимый тип " + dbms::DBTypeToString(accept) + " для типа " + dbms::DBTypeToString(orig)) {}
   InvalidExecute(dbms::DBDateKB date, int value)
       : ValueException("Нельзя из " + dbms::DateToStr(date) + " вычесть " + std::to_string(value)) {}
 };
