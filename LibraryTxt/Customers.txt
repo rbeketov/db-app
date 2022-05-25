@@ -2,7 +2,7 @@ Customers|CustomerID
 CompanyName|String|20|ContactName|String|16|CustomerID|String|8
   Richter_Supermarkt|       Anna_Holz|RICMA
   Richter_Supermarkt|       Anna_Holz|RICSU
-    Romero_y_tomillo|  Alejandra_Camin|ROMEY
+    Romero_y_tomillo| Alejandra_Camin|ROMEY
        Sante_Gourmet|       Anna_Holz|SANTG
   Save-a-lot_Markets|  Jose_Pavarotti|SAVEA
   Seven_Seas_Imports|       Anna_Holz|SEVES
