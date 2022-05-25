@@ -53,12 +53,17 @@ int menu() {
 }
 
 void test() {
-	types::SQLDate start("05.04.2017");
-	types::SQLDate end("05.12.2017");
+	types::SQLDate start("05.04.2016");
+	types::SQLDate end("05.12.2020");
 	dbms::DBTableTxt* orders = dateRange(DATABASE_ORDERS ,start, end);
 	std::unordered_map<std::string, std::vector<types::SQLValue*> > cOrders = customersOrders(orders);
 	std::unordered_map<std::string, double > cCash = customersCash(cOrders);
 	std::string mainCustomer = findMainCustomers(cCash);
 	std::pair<std::string, std::string> resInfo = customerInfo(mainCustomer);
-	std::cout << resInfo.first << " " << resInfo.second << std::endl;
+	// std::cout << resInfo.first << " " << resInfo.second << std::endl;
+
+	std::cout << companyIncome("Richter_Supermarkt", start, end) << std::endl;
+	
+	// 
+
 }

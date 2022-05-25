@@ -10,4 +10,5 @@ add_executable(practice
                 project/src/date.cpp 
                 project/src/dbvalue.cpp 
                 project/src/tabletxt.cpp
-                project/src/maincustomer.cpp)
+                project/src/maincustomer.cpp
+                project/src/income.cpp)

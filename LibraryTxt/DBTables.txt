@@ -1,1 +1,1 @@
-Books|Students|Abonements|Customers|OrderDetails|Orders|Products|TableRelations
+Customers|OrderDetails|Orders|Products

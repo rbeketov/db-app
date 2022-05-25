@@ -12,6 +12,7 @@
 #define DATABASE_ORDERS            "../LibraryTxt/Orders.txt"
 #define DATABASE_ORDER_DETAILS     "../LibraryTxt/OrderDetails.txt"
 #define DATABASE_CUSTOMERS         "../LibraryTxt/Customers.txt"
+#define DATABASE_PRODUCTS          "../LibraryTxt/Products.txt"
 
 #define LENGTH                     24
 #define ERROR_TAG                  -1
