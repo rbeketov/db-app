@@ -1,8 +1,11 @@
 #include "utils.h"
-#include "mcustomers.h"
+#include "service.h"
 
 enum menuStatus {
-	TEST = 1,
+	PRINT_COMPANY = 1,
+	MAIN_CUSTOMERS,
+	INCOME_COMPANY,
+	TEST = 8,
 	EXIT = 10,
 };
 
@@ -11,8 +14,23 @@ void test();
 
 int main () {
 	try {
+		std::pair<std::string, std::string> mCustomers;
+		std::pair<std::string, double> income;
 		while(true) {
 			switch(menu()) {
+				case PRINT_COMPANY:
+					printCompany();
+					break;
+				case MAIN_CUSTOMERS:
+					mCustomers = mainCustomers();
+					std::cout << "Самый прибыльный клиент за указанный период - " << mCustomers.first
+							  << " | " << mCustomers.second << std::endl;
+					break;
+				case INCOME_COMPANY:
+					income = companyIncome();
+					std::cout << "Доход " << income.first << " за указанный период времени составил "
+							  << income.second << std::endl;
+					break;
 				case TEST:
 					test();
 					break;
@@ -26,19 +44,20 @@ int main () {
 		}
 	} catch (std::exception& er) {
 		printf("error: %s\n", er.what());
-		// printf("Аварийный выход, внесённые ранее изменения сохранены...");
 		return -1;
 	} catch (...) {
 		printf("Упс! Что-то пошло не так... :(");
-		// printf("Аварийный выход, внесённые ранее изменения сохранены...");
 		return -1;
 	}
     
 }
 
 int menu() {
-    std::cout << "================= ПРАКТИКА ===================\n";
-	std::cout << "\t1 - Тест\n";
+    std::cout << "================= Калькулятор дохода ===================\n";
+	std::cout << "\t1 - Просмотреть все компании\n";
+	std::cout << "\t2 - Определить покупателя, который потратил больше всех денег\n";
+	std::cout << "\t3 - Подсчитать доход компании от продажи товаров\n";
+	std::cout << "\t8 - Провести тест работоспособности программы\n";
 	std::cout << "\t10 - Выход\n";
 	int choice;
 	std::cout << "Введите номер действия для выбора\n";
@@ -53,17 +72,5 @@ int menu() {
 }
 
 void test() {
-	types::SQLDate start("05.04.2016");
-	types::SQLDate end("05.12.2020");
-	dbms::DBTableTxt* orders = dateRange(DATABASE_ORDERS ,start, end);
-	std::unordered_map<std::string, std::vector<types::SQLValue*> > cOrders = customersOrders(orders);
-	std::unordered_map<std::string, double > cCash = customersCash(cOrders);
-	std::string mainCustomer = findMainCustomers(cCash);
-	std::pair<std::string, std::string> resInfo = customerInfo(mainCustomer);
-	// std::cout << resInfo.first << " " << resInfo.second << std::endl;
-
-	std::cout << companyIncome("Richter_Supermarkt", start, end) << std::endl;
-	
-	// 
-
+	puts("Тест успешный :)");
 }

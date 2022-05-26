@@ -56,6 +56,8 @@ class DBTableError: public ValueException {
        : ValueException("Ширина столбца " + std::to_string(sizeCol) + " больше ширины экрана\nТаблицу невозможно распечатать") {}
     DBTableError(dbms::DBDateKB& date)
        : ValueException("Введена некорректная дата") {}
+    DBTableError(dbms::DBDateKB& start, dbms::DBDateKB& end)
+       : ValueException("Введены некорректные даты (" + DateToStr(start) + " >= " + DateToStr(end) + ")") {}
     
 };
 
