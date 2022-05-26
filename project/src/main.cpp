@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "service.h"
+#include "test.h"
 
 enum menuStatus {
 	PRINT_COMPANY = 1,
@@ -10,46 +11,42 @@ enum menuStatus {
 };
 
 int menu(void);
-void test();
 
 int main () {
-	try {
 		std::pair<std::string, std::string> mCustomers;
 		std::pair<std::string, double> income;
 		while(true) {
-			switch(menu()) {
-				case PRINT_COMPANY:
-					printCompany();
+			try {
+				switch(menu()) {
+					case PRINT_COMPANY:
+						printCompany();
+						break;
+					case MAIN_CUSTOMERS:
+						mCustomers = mainCustomers();
+						std::cout << "Самый прибыльный клиент за указанный период - " << mCustomers.first
+								<< " | " << mCustomers.second << std::endl;
+						break;
+					case INCOME_COMPANY:
+						income = companyIncome();
+						std::cout << "Доход " << income.first << " за указанный период времени составил "
+								<< income.second << std::endl;
+						break;
+					case TEST:
+						test();
+						break;
+					case EXIT:
+						std::cout << "Завершение работы программы...\n";
+						return 0;
+					default:
+						std::cout << "Выбрано несуществующее действие, повторите попытку\n"; 
 					break;
-				case MAIN_CUSTOMERS:
-					mCustomers = mainCustomers();
-					std::cout << "Самый прибыльный клиент за указанный период - " << mCustomers.first
-							  << " | " << mCustomers.second << std::endl;
-					break;
-				case INCOME_COMPANY:
-					income = companyIncome();
-					std::cout << "Доход " << income.first << " за указанный период времени составил "
-							  << income.second << std::endl;
-					break;
-				case TEST:
-					test();
-					break;
-				case EXIT:
-					std::cout << "Завершение работы программы...\n";
-					return 0;
-				default:
-					std::cout << "Выбрано несуществующее действие, повторите попытку\n"; 
-				break;
+				}
+			} catch (std::exception& er) {
+				printf("error: %s\n", er.what());
+			} catch (...) {
+				printf("Упс! Что-то пошло не так... :(");
 			}
 		}
-	} catch (std::exception& er) {
-		printf("error: %s\n", er.what());
-		return -1;
-	} catch (...) {
-		printf("Упс! Что-то пошло не так... :(");
-		return -1;
-	}
-    
 }
 
 int menu() {
@@ -69,8 +66,4 @@ int menu() {
 		std::cin >> choice;
 	}
 	return choice;
-}
-
-void test() {
-	puts("Тест успешный :)");
 }

@@ -11,3 +11,9 @@ ProductID|String|20|UnitInStock|Int32|8|UnitPrice|Double|12
          Ipoh Coffee|       9|       45.26
    Rossle Sauerkraut|      20|        44
              Hot Dog|      20|         8
+           Dumplings|      35|        65.89
+           Lays Stax|      24|        20.4
+           Chesse   |     57 |        67.98
+           Ratatouis|     90 |        24.67
+           Okroshka |     34 |        12.4
+   Vodka Moroshka   |     99 |        3.6

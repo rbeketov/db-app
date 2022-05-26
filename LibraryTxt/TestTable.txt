@@ -1,0 +1,16 @@
+TestTable|TestTableID
+CompanyName|String|20|ContactName|String|16|CustomerID|String|8
+Richter Supermarkt|Anna Holz|RICMA
+Richter Supermarkt|Misha Vaskin|MIVSH
+Romero y tomillo|Alejandra Camin|ROMEY
+Sante Gourmet|Anna Holz|SANTG
+Save a lot Markets|Jose Pavarotti|SAVEA
+Seven Seas Imports|Anna Holz|SEVES
+Santo de Carlogino|Misha Vaskin|MISSC
+Seven Seas Imports|Anna Holz|SEVES
+Santo de Carlogino|Misha Vaskin|MISSC
+Magnit|Orlov Sergey|ORLMG
+Magnit|Orlov Sergey|ORLMG
+Magnit|Orlov Sergey|ORLMG
+Magnit|Orlov Sergey|ORLMG
+Magnit|Orlov Sergey|ORLMG
