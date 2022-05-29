@@ -4,12 +4,16 @@
 
 void test() {
 
+size_t counterTests = 0;
+
 // test #5.1.1 and #5.1.2
 puts("");
 dbms::DBTableTxt testTable;
 testTable.ReadDBTable(DATABASE_CUSTOMERS);
 if (testTable.GetData()->size() != 0) {
     puts("Пункты 5.1.1 и 5.1.2 проверены успешно");
+    counterTests++;
+    counterTests++;
 } else {
     puts("Пункты 5.1.1 и 5.1.2 не прошли проверку");
 }
@@ -33,6 +37,7 @@ if (testDate1 < testDate2 &&
     testDate1 != testDate2 &&
     !(testDate1 == testDate2)) {
     puts("Проверка сравнения дат прошла успешно (п 5.1.3)");
+    counterTests++;
 } else {
     puts("Проверка сравнения дат провалена (п 5.1.3)");
 }
@@ -44,17 +49,17 @@ if (((testDate1+=10) == testDate3) && ((testDate1-=10) == testDate4) && testDate
 } else {
     puts("Проверка численных операция над датами провалена (п 5.1.3)");
 }
-
-// test #5.1.4
 puts("");
+// test #5.1.4
 types::SQLString testString("Misha Vaskin");
 std::vector<int> testID = testTable.IndexOfRecord(&testString, "ContactName");
 if (testID.size() == 2) {
     puts("Пункты 5.1.4 и 5.1.6 проверены успешно");
+    counterTests++;
+    counterTests++;
 } else {
     puts("Пункты 5.1.4 и 5.1.6 проверку не прошли");
 }
-puts("");
 
 // test #5.1.5
 puts("");
@@ -82,6 +87,8 @@ testTable5.PrintTable();
 sizeAfter = testTable5.GetData()->size();
 if (sizeAfter > sizeBefore) {
     puts("Пункты 5.1.5 и 5.1.8 проверены успешно");
+    counterTests++;
+    counterTests++;
 } else {
     puts("Пункты 5.1.5 и 5.1.8 проверку не прошли");    
 }
@@ -92,6 +99,7 @@ dbms::DBTableTxt testTable6;
 testTable6.ReadDBTable(DATABASE_TEST);
 testTable6.PrintTable();
 puts("Пункт 5.1.7 проверен успешно");
+counterTests++;
 puts("");
 // test #5.1.10
 std::pair<std::string, std::string> resInfo;
@@ -112,6 +120,7 @@ std::string mainCustomer = findMainCustomers(cCash);
 resInfo = customerInfo(mainCustomer);
 if (resInfo.first == "Anna Holz" && resInfo.second == "RICMA") {
     puts("Пункт 5.1.10 проверен успешно");
+    counterTests++;
 } else {
     puts("Пункт 5.1.10 проверку не прошёл");    
 }
@@ -137,8 +146,14 @@ result.second = income;
 
 if (result.first == "Richter Supermarkt" && result.second-459.27 < 1e-6) {
     puts("Пункт 5.1.9 проверен успешно");
+    counterTests++;
 } else {
     puts("Пункт 5.1.9 проверку не прошёл");    
 }
 puts("");
+
+std::cout << "========================================================" << std::endl;
+std::cout << "\tПроверку успешно прошли " << counterTests << " из 10 пунктов" << std::endl;
+std::cout << "========================================================\n" << std::endl;
+
 }
